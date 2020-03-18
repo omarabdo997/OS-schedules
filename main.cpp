@@ -1,6 +1,8 @@
 #include "mainwindow.h"
-
+#include "scheduleselect.h"
 #include <QApplication>
+#include "processesselector.h"
+#include "answer.h"
 
 int main(int argc, char *argv[])
 {
