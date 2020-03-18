@@ -11,8 +11,17 @@ public:
     explicit ScheduleSelect(QWidget *parent = nullptr);
     ~ScheduleSelect();
 
-private:
+    int getOp() const;
 
+    int getNo_p() const;
+
+    void setOp(int value);
+
+    void setNo_p(int value);
+
+private:
+    int op;
+    int no_p;
 };
 
 #endif // SCHEDULESELECT_H
