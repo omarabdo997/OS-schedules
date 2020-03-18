@@ -13,6 +13,8 @@
 #include <QFormLayout>
 #include <QString>
 #include <QDebug>
+#include <QMessageBox>
+
 
 ScheduleSelect::ScheduleSelect(QWidget *parent) :
     QWidget(parent)
@@ -23,7 +25,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     QFont radio_text_secondry("times",10);
     QPalette title_style;
     title_style.setColor(QPalette::WindowText,Qt::blue);
-    setMinimumSize(250,250);
+    setMinimumSize(200,250);
 
     //schedular_select label
     QLabel *schedular_select=new QLabel("Schedular select",this);
@@ -63,42 +65,8 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     number_label->setFont(radio_text);
 
     //submit button
-    QPushButton *submit=new QPushButton("Submit",this);
-    connect(submit,&QPushButton::clicked,[=](){
-        if(fcfs->isChecked())
-        {
-            qDebug()<<"Hello";
-        }
-        else if(round_robin->isChecked())
-        {
-            setOp(1);
-        }
-        else if(sjf->isChecked())
-        {
-            if(sjf_non_preemptive->isChecked())
-            {
-                setOp(3);
-            }
-            else
-            {
-                setOp(2);
-            }
-        }
-        else if(priority->isChecked())
-        {
-            if(priority_non_preemptive->isChecked())
-            {
-                setOp(5);
-            }
-            else
-            {
-                setOp(4);
-            }
-        }
-        setNo_p(number_processes->text().toInt());
-        qDebug()<<getOp();
-        qDebug()<<getNo_p();
-    });
+//    QPushButton *submit=new QPushButton("Submit",this);
+
 
 
     //button grouping main radio buttons
@@ -127,12 +95,21 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     QHBoxLayout *layout_sjf=new QHBoxLayout;
     layout_sjf->addWidget(sjf_preemptive);
     layout_sjf->addWidget(sjf_non_preemptive);
-    layout_sjf->setContentsMargins(10,0,0,0);
+    layout_sjf->setContentsMargins(10,0,70,0);
+
             //priority
     QHBoxLayout *layout_priority=new QHBoxLayout;
     layout_priority->addWidget(priority_preemptive);
     layout_priority->addWidget(priority_non_preemptive);
-    layout_priority->setContentsMargins(10,0,0,0);
+    layout_priority->setContentsMargins(10,0,70,0);
+
+    //button layout
+    QHBoxLayout *button_layout=new QHBoxLayout;
+    submit->setMinimumWidth(50);
+    button_layout->addSpacing(120);
+    button_layout->addWidget(submit);
+    button_layout->addSpacing(120);
+
     //main vertical layout
     QVBoxLayout *layout=new QVBoxLayout(this);
     layout->addWidget(schedular_select);
@@ -145,17 +122,19 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     layout->addWidget(priority);
     layout->addLayout(layout_priority);
     layout->addLayout(form_layout);
-    layout->addWidget(submit);
+    layout->addLayout(button_layout);
 
-    layout->setContentsMargins(30,0,0,0);
+    layout->setContentsMargins(30,0,0,50);
 
 
     //signals and slots
         //submit button
+//    connect(submit,SIGNAL(clicked()),this,SLOT(emit_input_finished()));
+
     connect(submit,&QPushButton::clicked,[=](){
         if(fcfs->isChecked())
         {
-            qDebug()<<"Hello";
+            setOp(0);
         }
         else if(round_robin->isChecked())
         {
@@ -184,6 +163,12 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
             }
         }
         setNo_p(number_processes->text().toInt());
+        if(no_p>0 && op>=0 && op<=5)
+            emit input_finished();
+        else
+        {
+            QMessageBox::critical(this,"Wrong input","Please select a schedule and enter a valid process number");
+        }
         qDebug()<<getOp();
         qDebug()<<getNo_p();
     });
@@ -196,9 +181,13 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
         sjf_preemptive->setChecked(false);
         sjf_non_preemptive->setChecked(false);
         sjf_options->setExclusive(true);
+        if(sjf->isChecked())
+        {
+            sjf_preemptive->setChecked(true);
+        }
 
     });
-    connect(priority,&QRadioButton::toggled,[priority_options,priority_preemptive,priority_non_preemptive]()
+    connect(priority,&QRadioButton::toggled,[priority_options,priority_preemptive,priority_non_preemptive,priority]()
     {
         priority_preemptive->setEnabled(!priority_preemptive->isEnabled());
         priority_non_preemptive->setEnabled(!priority_non_preemptive->isEnabled());
@@ -206,6 +195,10 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
         priority_preemptive->setChecked(false);
         priority_non_preemptive->setChecked(false);
         priority_options->setExclusive(true);
+        if(priority->isChecked())
+        {
+            priority_preemptive->setChecked(true);
+        }
 
     });
 
@@ -248,3 +241,6 @@ void ScheduleSelect::setNo_p(int value)
 {
     no_p = value;
 }
+
+
+

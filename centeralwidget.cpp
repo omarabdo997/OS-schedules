@@ -3,6 +3,10 @@
 #include "processesselector.h"
 #include <QGridLayout>
 #include "answer.h"
+#include <QDebug>
+#include <QVBoxLayout>
+#include <QScrollArea>
+#include <QScrollBar>
 
 
 CenteralWidget::CenteralWidget(QWidget *parent) :
@@ -10,13 +14,24 @@ CenteralWidget::CenteralWidget(QWidget *parent) :
 
 {
     ScheduleSelect *scheduleselect=new ScheduleSelect(this);
-    ProcessesSelector *ps=new ProcessesSelector(this);
-    Answer *ans=new Answer(this);
     QGridLayout *layout=new QGridLayout(this);
     layout->addWidget(scheduleselect,0,0);
-    layout->setSpacing(200);
-    layout->addWidget(ps,0,1);
-    layout->addWidget(ans,1,0,1,2);
+    layout->setSpacing(50);
+
+
+    connect(scheduleselect,&ScheduleSelect::input_finished,[scheduleselect,this,layout]()
+    {
+        ProcessesSelector *ps=new ProcessesSelector(this);
+
+        ps->setModel(scheduleselect->getOp(),scheduleselect->getNo_p());
+        QScrollArea *bar=new QScrollArea(this);
+        bar->setWidget(ps);
+
+        layout->addWidget(bar,0,1);
+
+    });
+
+
 
 }
 
