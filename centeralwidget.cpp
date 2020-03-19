@@ -23,44 +23,6 @@ CenteralWidget::CenteralWidget(QWidget *parent) :
 
 
     connect(scheduleselect,SIGNAL(input_finished()),this,SLOT(create_processess()));
-
-
-
-
-//            ps->setModel(scheduleselect->getOp(),scheduleselect->getNo_p());
-
-
-
-    //        qDebug()<<"width: "<<bar->size();
-    //        bar->set
-    //        ps->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Preferred);
-    //        ps->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Preferred);
-
-
-//            layout->addWidget(bar,0,1);
-
-//        else
-//        {
-//            delete ps;
-//            ps=new ProcessesSelector(this);
-//            ps->setModel(scheduleselect->getOp(),scheduleselect->getNo_p());
-
-//            QScrollArea *bar=new QScrollArea(this);
-//            bar->setWidget(ps);
-//    //        qDebug()<<"width: "<<bar->size();
-//    //        bar->set
-//    //        ps->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Preferred);
-//    //        ps->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Preferred);
-
-
-//            layout->addWidget(bar,0,1);
-//        }
-
-
-
-
-
-
 }
 
 CenteralWidget::~CenteralWidget()
