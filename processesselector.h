@@ -16,6 +16,7 @@ public:
     explicit ProcessesSelector(QWidget *parent = nullptr);
     ~ProcessesSelector();
     void setModel(int op,int no_p);
+public slots:
 
 private:
 

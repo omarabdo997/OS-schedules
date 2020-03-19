@@ -20,7 +20,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     QWidget(parent)
 {
     //style
-    QFont title("times",14,QFont::Bold,true);
+    QFont title("times",18,QFont::Bold,true);
     QFont radio_text("times",12);
     QFont radio_text_secondry("times",10);
     QPalette title_style;
@@ -28,7 +28,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     setMinimumSize(200,250);
 
     //schedular_select label
-    QLabel *schedular_select=new QLabel("Schedular select",this);
+    QLabel *schedular_select=new QLabel("Schedular Select",this);
     schedular_select->setFont(title);
     schedular_select->setPalette(title_style);
 
@@ -112,6 +112,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
 
     //main vertical layout
     QVBoxLayout *layout=new QVBoxLayout(this);
+    layout->setSpacing(10);
     layout->addWidget(schedular_select);
 //    layout->setMargin(0);
     layout->addSpacing(10);
@@ -121,10 +122,12 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     layout->addLayout(layout_sjf);
     layout->addWidget(priority);
     layout->addLayout(layout_priority);
+    layout->addSpacing(30);
     layout->addLayout(form_layout);
+    layout->addSpacing(10);
     layout->addLayout(button_layout);
 
-    layout->setContentsMargins(30,0,0,50);
+    layout->setContentsMargins(30,0,0,0);
 
 
     //signals and slots

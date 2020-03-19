@@ -6,9 +6,10 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle("OS Scheduler");
-    setMinimumSize(800,500);
+//    setMinimumSize(1020,600);
     CenteralWidget *centerwidget=new CenteralWidget(this);
     setCentralWidget(centerwidget);
+    setMaximumSize(1100,600);
 
 
 //    QHBoxLayout *layout=new QHBoxLayout(this);

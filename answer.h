@@ -11,7 +11,7 @@ class Answer : public QWidget
 public:
     explicit Answer(QWidget *parent = nullptr);
     ~Answer();
-
+    void set_model();
 private:
 
 };
