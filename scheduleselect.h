@@ -26,7 +26,7 @@ signals:
 private:
     int op;
     int no_p;
-    QPushButton *submit=new QPushButton("Submit",this);
+
 };
 
 #endif // SCHEDULESELECT_H

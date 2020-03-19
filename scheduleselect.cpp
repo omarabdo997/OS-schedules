@@ -65,7 +65,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     number_label->setFont(radio_text);
 
     //submit button
-//    QPushButton *submit=new QPushButton("Submit",this);
+    QPushButton *submit=new QPushButton("Submit",this);
 
 
 
