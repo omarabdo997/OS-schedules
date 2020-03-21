@@ -1,8 +1,8 @@
-#ifndef PROCESS_H
-#define PROCESS_H
+#ifndef SYSPROCESS_H
+#define SYSPROCESS_H
 #include <QString>
 
-class Process
+class SysProcess
 {
 private:
     QString name;
@@ -13,9 +13,9 @@ private:
 
 
 public:
-    Process();
-    Process(QString name);
-    Process(QString name,QString RPG,float burstTime,
+    SysProcess();
+    SysProcess(QString name);
+    SysProcess(QString name,QString RPG,float burstTime,
             float arrivalTime,int priority);
     QString getName() const;
     void setName(const QString &value);
@@ -29,4 +29,4 @@ public:
     void setPriority(int value);
 };
 
-#endif // PROCESS_H
+#endif // SYSPROCESS_H

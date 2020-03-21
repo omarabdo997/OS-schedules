@@ -21,14 +21,18 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     processesselector.cpp \
-    scheduleselect.cpp
+    scheduleselect.cpp \
+    interval.cpp \
+    sysprocess.cpp
 
 HEADERS += \
     answer.h \
     centeralwidget.h \
     mainwindow.h \
     processesselector.h \
-    scheduleselect.h
+    scheduleselect.h \
+    interval.h \
+    sysprocess.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

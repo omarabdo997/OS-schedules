@@ -20,12 +20,12 @@ void Interval::setTo(float value)
     to = value;
 }
 
-Process Interval::getProcess() const
+SysProcess Interval::getProcess() const
 {
     return process;
 }
 
-void Interval::setProcess(const Process &value)
+void Interval::setProcess(const SysProcess &value)
 {
     process = value;
 }
@@ -41,7 +41,7 @@ Interval::Interval(float from, float to)
     this->setTo(to);
 }
 
-Interval::Interval(float from, float to, Process process)
+Interval::Interval(float from, float to, SysProcess process)
 {
     this->setFrom(from);
     this->setTo(to);
