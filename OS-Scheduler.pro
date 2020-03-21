@@ -23,7 +23,8 @@ SOURCES += \
     processesselector.cpp \
     scheduleselect.cpp \
     interval.cpp \
-    sysprocess.cpp
+    sysprocess.cpp \
+    scheduler.cpp
 
 HEADERS += \
     answer.h \
@@ -32,7 +33,8 @@ HEADERS += \
     processesselector.h \
     scheduleselect.h \
     interval.h \
-    sysprocess.h
+    sysprocess.h \
+    scheduler.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
