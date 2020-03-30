@@ -32,6 +32,7 @@ private:
      QLabel *avg_waiting_time;
      QLabel *avg_waiting_time_answer;
      QVector<SysProcess>processes;
+     Scheduler *scheduler;
      int FIRST_PROCESSES_CREATION;
      int FIRST_PROCESSES_ANSWER;
 

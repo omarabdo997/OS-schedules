@@ -31,7 +31,7 @@ CenteralWidget::CenteralWidget(QWidget *parent) :
 
 CenteralWidget::~CenteralWidget()
 {
-
+    delete scheduler;
 }
 
 void CenteralWidget::create_processess()
@@ -68,15 +68,25 @@ void CenteralWidget::create_answer()
         delete bar2;
         delete avg_waiting_time;
         delete avg_waiting_time_answer;
+        delete scheduler;
     }
     setMinimumHeight(600);
     processes=ps->getProcesses();
     qDebug()<<processes.size();
-    FCFSSched fcfs(processes);
-    fcfs.schedule();
+    switch (scheduleselect->getOp())
+    {
+    case(0):
+        scheduler=new FCFSSched(processes);
+        break;
+//    case(1):
+//        scheduler=new
+
+    }
+
+    scheduler->schedule();
     answer=new Answer(this);
 
-    answer->set_model(fcfs.getIntervals());
+    answer->set_model(scheduler->getIntervals());
     bar2=new QScrollArea(this);
     bar2->setWidget(answer);
     bar2->setFrameShape(QFrame::NoFrame);
@@ -87,7 +97,7 @@ void CenteralWidget::create_answer()
     waiting_time_palette.setColor(QPalette::WindowText,Qt::blue);
 
     avg_waiting_time=new QLabel("Average Waiting Time",this);
-    avg_waiting_time_answer=new QLabel(QString::number(fcfs.waitingTime()),this);
+    avg_waiting_time_answer=new QLabel(QString::number(scheduler->waitingTime()),this);
     avg_waiting_time->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::Expanding);
     avg_waiting_time->setFont(waiting_time_label);
     avg_waiting_time->setPalette(waiting_time_palette);
