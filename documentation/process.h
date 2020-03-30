@@ -1,27 +1,26 @@
-#ifndef SYSPROCESS_H
-#define SYSPROCESS_H
+#ifndef PROCESS_H
+#define PROCESS_H
 #include <QString>
-#include <QVector>
 
-class SysProcess
+class Process
 {
 private:
     QString name;
-    QVector<int> RGB={0,0,0};
+    QString RPG;
     float burstTime;
     float arrivalTime;
     int priority;
 
 
 public:
-    SysProcess();
-    SysProcess(QString name);
-    SysProcess(QString name,QVector<int> RGP,float burstTime,
+    Process();
+    Process(QString name);
+    Process(QString name,QString RPG,float burstTime,
             float arrivalTime,int priority);
     QString getName() const;
     void setName(const QString &value);
-    QVector<int> getRGB() const;
-    void setRGB(const QVector<int> &value);
+    QString getRPG() const;
+    void setRPG(const QString &value);
     float getBurstTime() const;
     void setBurstTime(float value);
     float getArrivalTime() const;
@@ -30,4 +29,4 @@ public:
     void setPriority(int value);
 };
 
-#endif // SYSPROCESS_H
+#endif // PROCESS_H

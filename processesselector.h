@@ -6,7 +6,7 @@
 #include <QWidget>
 #include <QGridLayout>
 #include <QPushButton>
-
+#include "sysprocess.h"
 
 class ProcessesSelector : public QWidget
 {
@@ -16,9 +16,13 @@ public:
     explicit ProcessesSelector(QWidget *parent = nullptr);
     ~ProcessesSelector();
     void setModel(int op,int no_p);
-public slots:
+    QVector<SysProcess> getProcesses() const;
 
+public slots:
+signals:
+    void input_finished();
 private:
+    QVector<SysProcess>processes;
 
 
 

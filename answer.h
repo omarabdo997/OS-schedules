@@ -2,7 +2,7 @@
 #define ANSWER_H
 
 #include <QWidget>
-
+#include "interval.h"
 
 class Answer : public QWidget
 {
@@ -11,7 +11,7 @@ class Answer : public QWidget
 public:
     explicit Answer(QWidget *parent = nullptr);
     ~Answer();
-    void set_model();
+    void set_model(QVector<Interval> intervals);
 private:
 
 };

@@ -6,6 +6,8 @@
 #include "scheduleselect.h"
 #include <QGridLayout>
 #include <QScrollArea>
+#include <answer.h>
+#include "fcfssched.h"
 
 
 class CenteralWidget : public QWidget
@@ -18,13 +20,20 @@ public:
 
 private slots:
      void create_processess();
+     void create_answer();
 private:
      ScheduleSelect *scheduleselect;
 
      QGridLayout *layout;
      ProcessesSelector *ps;
+     Answer *answer;
      QScrollArea *bar;
+     QScrollArea *bar2;
+     QLabel *avg_waiting_time;
+     QLabel *avg_waiting_time_answer;
+     QVector<SysProcess>processes;
      int FIRST_PROCESSES_CREATION;
+     int FIRST_PROCESSES_ANSWER;
 
 };
 

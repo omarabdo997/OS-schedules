@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     answer.cpp \
     centeralwidget.cpp \
+    fcfssched.cpp \
     main.cpp \
     mainwindow.cpp \
     processesselector.cpp \
@@ -29,6 +30,7 @@ SOURCES += \
 HEADERS += \
     answer.h \
     centeralwidget.h \
+    fcfssched.h \
     mainwindow.h \
     processesselector.h \
     scheduleselect.h \

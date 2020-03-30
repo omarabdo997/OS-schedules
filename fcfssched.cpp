@@ -1,6 +1,6 @@
 #include "fcfssched.h"
-
-bool FCFSSched::cmp(SysProcess p1, SysProcess p2)
+#include <algorithm>
+bool FCFSSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
     if(p1.getArrivalTime() < p2.getArrivalTime())
         return true;
@@ -9,6 +9,8 @@ bool FCFSSched::cmp(SysProcess p1, SysProcess p2)
     else return false;
 }
 
+
+
 FCFSSched::FCFSSched()
 {
 
@@ -16,7 +18,7 @@ FCFSSched::FCFSSched()
 
 void FCFSSched::schedule()
 {
-    sort(processes.begin(),processes.end(),cmp);
+    qSort(processes.begin(),processes.end(),cmp);
     float finish = 0;
     Interval interval = Interval();
     intervals.clear();
