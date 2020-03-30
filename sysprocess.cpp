@@ -10,12 +10,12 @@ void SysProcess::setName(const QString &value)
     name = value;
 }
 
-QString SysProcess::getRPG() const
+QVector<int> SysProcess::getRPG() const
 {
     return RPG;
 }
 
-void SysProcess::setRPG(const QString &value)
+void SysProcess::setRPG(const QVector<int> &value)
 {
     RPG = value;
 }
@@ -60,7 +60,7 @@ SysProcess::SysProcess(QString name)
     this->setName(name);
 }
 
-SysProcess::SysProcess(QString name, QString RPG, float burstTime, float arrivalTime, int priority)
+SysProcess::SysProcess(QString name, QVector<int> RPG, float burstTime, float arrivalTime, int priority)
 {
     this->setName(name);
     this->setRPG(RPG);

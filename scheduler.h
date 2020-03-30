@@ -6,7 +6,7 @@
 
 class Scheduler
 {
-private:
+protected:
     QVector<SysProcess> processes;
     QVector<Interval> intervals;
 public:
