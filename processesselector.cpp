@@ -27,16 +27,10 @@ void ProcessesSelector::setModel(int op, int no_p)
     std::vector<QLineEdit*>p_time;
     std::vector<QLineEdit*>p_arrival_time;
     std::vector<QLineEdit*>p_priority;
-
     QLineEdit *burst;
     std::vector<QPushButton*>color_text;
     std::vector<QPushButton*>color_background;
-
     QGridLayout *layout=new QGridLayout(this);
-//    QHBoxLayout *layout_main=new QHBoxLayout(this);
-////    layout_main->addSpacing(10);
-//    layout_main->addLayout(layout);
-////    layout_main->addSpacing(40);
     QPushButton * submit ;
 
 
