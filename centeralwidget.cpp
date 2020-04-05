@@ -80,6 +80,12 @@ void CenteralWidget::create_answer()
         break;
 //    case(1):
 //        scheduler=new
+    case(4):
+        scheduler=new prioritysched(processes,1);
+        break;
+    case(5):
+        scheduler=new prioritysched(processes,0);
+        break;
 
     }
 

@@ -229,6 +229,7 @@ void ProcessesSelector::setModel(int op, int no_p)
 
 
           });
+
           layout->addWidget(p_label[i],i,0);
           layout->addWidget(p_time[i],i,1);
           layout->addWidget(p_arrival_time[i],i,2);
@@ -240,6 +241,19 @@ void ProcessesSelector::setModel(int op, int no_p)
       layout->setHorizontalSpacing(0);
       submit=new QPushButton("Submit",this);
       layout->addWidget(submit,no_p,2,1,1);
+      connect(submit,&QPushButton::clicked,this,[=]()
+      {
+          processes.clear();
+          for(int i=0;i<no_p;i++)
+          {
+              QColor color=p_label[i]->palette().color(QPalette::Window);
+              QVector<int>rgb={color.red(),color.green(),color.blue()};
+
+
+              processes.push_back(SysProcess(p_label[i]->text(),rgb,p_time[i]->text().toFloat(),p_arrival_time[i]->text().toFloat(),p_priority[i]->text().toFloat()));
+          }
+          emit input_finished();
+      });
 
   }
 

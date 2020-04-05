@@ -8,7 +8,7 @@
 #include <QScrollArea>
 #include <answer.h>
 #include "fcfssched.h"
-
+#include  <PrioritySched.h>
 
 class CenteralWidget : public QWidget
 {
