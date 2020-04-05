@@ -28,7 +28,7 @@ void ProcessesSelector::setModel(int op, int no_p)
     std::vector<QLineEdit*>p_arrival_time;
     std::vector<QLineEdit*>p_priority;
     QLineEdit *burst;
-    std::vector<QPushButton*>color_text;
+//    std::vector<QPushButton*>color_text;
     std::vector<QPushButton*>color_background;
     QGridLayout *layout=new QGridLayout(this);
     QPushButton * submit ;
@@ -54,24 +54,11 @@ void ProcessesSelector::setModel(int op, int no_p)
 
           p_arrival_time.push_back(new QLineEdit(this));
           p_arrival_time[i]->setPlaceholderText("Arrival Time");
-          color_text.push_back(new QPushButton("Text color",this));
-          color_background.push_back(new QPushButton("BG color",this));
+
+          color_background.push_back(new QPushButton("Color",this));
 
 
-          connect(color_text[i],&QPushButton::clicked,this,[i,this,p_label]()
-          {
-              QPalette palette=p_label[i]->palette();
-              QColor color=palette.color(QPalette::WindowText);
-              qDebug()<<"color"<<color;
-              QColor selected_color=QColorDialog::getColor(color,this,"Choose Text color");
-              if(selected_color.isValid())
-              {
-                  palette.setColor(QPalette::WindowText,selected_color);
-                  p_label[i]->setPalette(palette);
-              }
 
-
-          });
           connect(color_background[i],&QPushButton::clicked,this,[i,this,p_label]()
           {
               QPalette palette=p_label[i]->palette();
@@ -89,14 +76,14 @@ void ProcessesSelector::setModel(int op, int no_p)
           layout->addWidget(p_label[i],i,0);
           layout->addWidget(p_time[i],i,1);
           layout->addWidget(p_arrival_time[i],i,2);
-          layout->addWidget(color_text[i],i,3);
-          layout->addWidget(color_background[i],i,4);
-//
+
+          layout->addWidget(color_background[i],i,3);
+
 
       }
       submit=new QPushButton("Submit",this);
       layout->addWidget(submit,no_p,2,1,1);
-      layout->setHorizontalSpacing(0);
+      layout->setHorizontalSpacing(15);
       connect(submit,&QPushButton::clicked,this,[=]()
       {
           processes.clear();
@@ -122,24 +109,11 @@ void ProcessesSelector::setModel(int op, int no_p)
           p_time[i]->setPlaceholderText("Time");
           p_arrival_time.push_back(new QLineEdit(this));
           p_arrival_time[i]->setPlaceholderText("Arrival Time");
-          color_text.push_back(new QPushButton("Text color",this));
-          color_background.push_back(new QPushButton("BG color",this));
+
+          color_background.push_back(new QPushButton("Color",this));
 
 
-          connect(color_text[i],&QPushButton::clicked,this,[i,this,p_label]()
-          {
-              QPalette palette=p_label[i]->palette();
-              QColor color=palette.color(QPalette::WindowText);
-              qDebug()<<"color"<<color;
-              QColor selected_color=QColorDialog::getColor(color,this,"Choose Text color");
-              if(selected_color.isValid())
-              {
-                  palette.setColor(QPalette::WindowText,selected_color);
-                  p_label[i]->setPalette(palette);
-              }
 
-
-          });
           connect(color_background[i],&QPushButton::clicked,this,[i,this,p_label]()
           {
               QPalette palette=p_label[i]->palette();
@@ -157,8 +131,8 @@ void ProcessesSelector::setModel(int op, int no_p)
           layout->addWidget(p_label[i],i,0);
           layout->addWidget(p_time[i],i,1);
           layout->addWidget(p_arrival_time[i],i,2);
-          layout->addWidget(color_text[i],i,3);
-          layout->addWidget(color_background[i],i,4);
+
+          layout->addWidget(color_background[i],i,3);
 
       }
 
@@ -171,7 +145,7 @@ void ProcessesSelector::setModel(int op, int no_p)
       layout->addWidget(burst,no_p,0,1,3);
       submit=new QPushButton("Submit",this);
       layout->addWidget(submit,no_p+1,2,1,1);
-      layout->setHorizontalSpacing(0);
+      layout->setHorizontalSpacing(15);
 
   }
   else if(op==4 or op==5)
@@ -191,24 +165,11 @@ void ProcessesSelector::setModel(int op, int no_p)
           p_priority.push_back(new QLineEdit(this));
           p_priority[i]->setPlaceholderText("Priority");
           p_priority[i]->setMaximumWidth(90);
-          color_text.push_back(new QPushButton("Text color",this));
-          color_background.push_back(new QPushButton("BG color",this));
+
+          color_background.push_back(new QPushButton("Color",this));
 
 
-          connect(color_text[i],&QPushButton::clicked,this,[i,this,p_label]()
-          {
-              QPalette palette=p_label[i]->palette();
-              QColor color=palette.color(QPalette::WindowText);
-              qDebug()<<"color"<<color;
-              QColor selected_color=QColorDialog::getColor(color,this,"Choose Text color");
-              if(selected_color.isValid())
-              {
-                  palette.setColor(QPalette::WindowText,selected_color);
-                  p_label[i]->setPalette(palette);
-              }
 
-
-          });
           connect(color_background[i],&QPushButton::clicked,this,[i,this,p_label]()
           {
               QPalette palette=p_label[i]->palette();
@@ -228,11 +189,10 @@ void ProcessesSelector::setModel(int op, int no_p)
           layout->addWidget(p_time[i],i,1);
           layout->addWidget(p_arrival_time[i],i,2);
           layout->addWidget(p_priority[i],i,3);
-          layout->addWidget(color_text[i],i,4);
-          layout->addWidget(color_background[i],i,5);
+          layout->addWidget(color_background[i],i,4);
 
       }
-      layout->setHorizontalSpacing(0);
+      layout->setHorizontalSpacing(15);
       submit=new QPushButton("Submit",this);
       layout->addWidget(submit,no_p,2,1,1);
       connect(submit,&QPushButton::clicked,this,[=]()

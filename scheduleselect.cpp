@@ -28,7 +28,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     setMinimumSize(200,250);
 
     //schedular_select label
-    QLabel *schedular_select=new QLabel("Schedular Select",this);
+    QLabel *schedular_select=new QLabel("Scheduler Select",this);
     schedular_select->setFont(title);
     schedular_select->setPalette(title_style);
 

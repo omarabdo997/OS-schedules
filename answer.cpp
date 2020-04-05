@@ -21,14 +21,8 @@ void Answer::set_model(QVector<Interval>intervals)
 {
     setMaximumHeight(100);
     setMinimumHeight(100);
-    QPalette color1,color2;
-    color1.setColor(QPalette::Window,Qt::red);
-    color2.setColor(QPalette::Window,Qt::blue);
     std::vector<QLabel*>p_lister;
     std::vector<QLabel*>p_ruler;
-//    QGridLayout *layout=new QGridLayout(this);
-
-//    QWidget *holder=new QWidget(this);
     QVBoxLayout *main_layout=new QVBoxLayout(this);
     QHBoxLayout *layout2=new QHBoxLayout;
     QHBoxLayout *ruler=new QHBoxLayout;
@@ -38,8 +32,10 @@ void Answer::set_model(QVector<Interval>intervals)
     main_layout->setContentsMargins(0,50,0,0);
     layout2->setSpacing(0);
     ruler->setSpacing(0);
-//    holder->setMinimumSize(200,200);
-//    holder->move(500,500);
+
+    QLabel *starting_ruler=new QLabel("0",this);
+
+    ruler->addWidget(starting_ruler);
     float from=0;
     for(int i=0;i<intervals.size();i++)
     {
@@ -48,10 +44,10 @@ void Answer::set_model(QVector<Interval>intervals)
 
              QLabel *label=new QLabel("",this);
              QLabel *rulerr=new QLabel(QString::number(intervals[i].getFrom()),this);
-             label->setMinimumWidth(100*(intervals[i].getFrom()-from));
-             rulerr->setMinimumWidth(100*(intervals[i].getFrom()-from));
-             label->setMaximumWidth(100*(intervals[i].getFrom()-from));
-             rulerr->setMaximumWidth(100*(intervals[i].getFrom()-from));
+             label->setMinimumWidth(40*(intervals[i].getFrom()-from));
+             rulerr->setMinimumWidth(40*(intervals[i].getFrom()-from));
+             label->setMaximumWidth(40*(intervals[i].getFrom()-from));
+             rulerr->setMaximumWidth(40*(intervals[i].getFrom()-from));
              label->setMaximumHeight(50);
              label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
              rulerr->setAlignment(Qt::AlignRight);
@@ -71,10 +67,10 @@ void Answer::set_model(QVector<Interval>intervals)
         p_ruler.push_back(new QLabel(QString::number(intervals[i].getTo()),this));
         p_lister[i]->setPalette(palette);
 
-        p_lister[i]->setMinimumWidth(100*(intervals[i].getTo()-intervals[i].getFrom()));
-        p_ruler[i]->setMinimumWidth(100*(intervals[i].getTo()-intervals[i].getFrom()));
-        p_lister[i]->setMaximumWidth(100*(intervals[i].getTo()-intervals[i].getFrom()));
-        p_ruler[i]->setMaximumWidth(100*(intervals[i].getTo()-intervals[i].getFrom()));
+        p_lister[i]->setMinimumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
+        p_ruler[i]->setMinimumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
+        p_lister[i]->setMaximumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
+        p_ruler[i]->setMaximumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
         p_lister[i]->setMaximumHeight(50);
         p_lister[i]->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         p_ruler[i]->setAlignment(Qt::AlignRight);
