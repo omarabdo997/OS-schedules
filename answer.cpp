@@ -32,7 +32,7 @@ void Answer::set_model(QVector<Interval>intervals)
     main_layout->setContentsMargins(0,50,0,0);
     layout2->setSpacing(0);
     ruler->setSpacing(0);
-
+    QFont label_font("times",10,QFont::Bold);
     QLabel *starting_ruler=new QLabel("0",this);
 
     ruler->addWidget(starting_ruler);
@@ -72,6 +72,7 @@ void Answer::set_model(QVector<Interval>intervals)
         p_lister[i]->setMaximumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
         p_ruler[i]->setMaximumWidth(40*(intervals[i].getTo()-intervals[i].getFrom()));
         p_lister[i]->setMaximumHeight(50);
+        p_lister[i]->setFont(label_font);
         p_lister[i]->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
         p_ruler[i]->setAlignment(Qt::AlignRight);
         layout2->addWidget(p_lister[i]);

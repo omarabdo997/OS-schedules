@@ -14,7 +14,7 @@ CenteralWidget::CenteralWidget(QWidget *parent) :
 
 {
     //starting size
-    setMinimumSize(250,400);
+    setMinimumSize(500,400);
 
     //starting widget
     scheduleselect=new ScheduleSelect(this);
@@ -123,9 +123,13 @@ void CenteralWidget::create_answer()
     layout->addWidget(bar2,2,0,1,2);
 
     //waiting time font and color
-    QFont waiting_time_label("times",20,QFont::Bold,true);
+    QColor veryDarkGrey(47,47,47);
+    QColor veryDarkGreen(15,42,15);
+    QFont waiting_time_label("times",18,QFont::Bold);
     QPalette waiting_time_palette;
-    waiting_time_palette.setColor(QPalette::WindowText,Qt::blue);
+    waiting_time_palette.setColor(QPalette::WindowText,veryDarkGrey);
+    QPalette waiting_time_answer_palette;
+    waiting_time_answer_palette.setColor(QPalette::WindowText,veryDarkGreen);
 
     //avg waiting time label and answer creation
     avg_waiting_time=new QLabel("Average Waiting Time: ",this);
@@ -138,7 +142,7 @@ void CenteralWidget::create_answer()
 
     //avg waiting time answer styling
     avg_waiting_time_answer->setFont(waiting_time_label);
-    avg_waiting_time_answer->setPalette(waiting_time_palette);
+    avg_waiting_time_answer->setPalette(waiting_time_answer_palette);
 
 
     //avg waiting time label and answer laying out

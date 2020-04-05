@@ -20,11 +20,11 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
     QWidget(parent)
 {
     //style
-    QFont title("times",18,QFont::Bold,true);
+    QFont title("times",24,QFont::Bold);
     QFont radio_text("times",12);
     QFont radio_text_secondry("times",10);
     QPalette title_style;
-    title_style.setColor(QPalette::WindowText,Qt::blue);
+    title_style.setColor(QPalette::WindowText,Qt::darkRed);
     setMinimumSize(200,250);
 
     //schedular_select label
