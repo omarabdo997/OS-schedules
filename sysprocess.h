@@ -2,7 +2,6 @@
 #define SYSPROCESS_H
 #include <QString>
 #include <QVector>
-
 class SysProcess
 {
 private:
@@ -11,7 +10,7 @@ private:
     float burstTime;
     float arrivalTime;
     int priority;
-
+    QString status;
 
 public:
     SysProcess();
@@ -28,6 +27,8 @@ public:
     void setArrivalTime(float value);
     int getPriority() const;
     void setPriority(int value);
+    QString getStatus();
+    void setStatus(QString value);
 };
 
 #endif // SYSPROCESS_H

@@ -2,31 +2,23 @@
 #define PRIORITYSCHED_H
 #include "scheduler.h"
 #include <QtAlgorithms>
-
-
 class prioritysched : public Scheduler
 {
 private:
 
 bool is_Preemptive;
-float qtime;
-
 static bool cmp(const SysProcess &p1 , const SysProcess &p2);
-
+static bool pcmp(const SysProcess &p1,const SysProcess &p2);
+static bool arriv_cmp(QVector<SysProcess>&processes);
 public:
 
 prioritysched();
 prioritysched(QVector<SysProcess> processes,bool is_Preemptive);
-prioritysched(QVector<SysProcess> processes,bool is_Preemptive,float qtime);
 void set_is_Preemptive(bool value);
 bool get_is_preemptive();
-void set_qtime(float value);
-float get_qtime();
 
 void schedule() ;
 float waitingTime();
-
-
 
 };
 

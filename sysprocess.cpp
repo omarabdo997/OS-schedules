@@ -49,7 +49,14 @@ void SysProcess::setPriority(int value)
 {
     priority = value;
 }
-
+void SysProcess::setStatus(QString value)
+{
+    status = value;
+}
+QString SysProcess::getStatus()
+{
+    return status;
+}
 SysProcess::SysProcess()
 {
 
