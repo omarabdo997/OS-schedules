@@ -85,7 +85,7 @@ void CenteralWidget::create_answer()
 
     //get submited processes
     processes=ps->getProcesses();
-
+    qDebug()<<"processes"<<processes.size();
 
     //dynamic bynding to scheduler class
     switch (scheduleselect->getOp())
@@ -95,6 +95,12 @@ void CenteralWidget::create_answer()
         break;
 //    case(1):
 //        scheduler=new
+    case(2):
+        scheduler=new SJFSched(1,processes);
+        break;
+    case(3):
+        scheduler=new SJFSched(0,processes);
+        break;
     case(4):
         scheduler=new prioritysched(processes,1);
         break;
@@ -109,6 +115,7 @@ void CenteralWidget::create_answer()
 
     //create answer widget and send needed data
     answer=new Answer(this);
+    qDebug()<<"first:"<<scheduler->getIntervals()[0].getFrom();
     answer->set_model(scheduler->getIntervals());
 
     //create horizontal scroll bar and set it to answer widget

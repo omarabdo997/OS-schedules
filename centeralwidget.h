@@ -9,7 +9,7 @@
 #include <answer.h>
 #include "fcfssched.h"
 #include  <PrioritySched.h>
-
+#include "sjfsched.h"
 class CenteralWidget : public QWidget
 {
     Q_OBJECT

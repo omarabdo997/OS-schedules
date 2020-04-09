@@ -52,8 +52,10 @@ void SJFSched::schedule()
       interval.setTo(finish);
       interval.setProcess(processes[i]);
       intervals.push_back(interval);
-         }
- }
+     }
+}
+
+
 
 
 /*
@@ -86,7 +88,10 @@ void SJFSched::schedule()
 
 */
 
+float SJFSched::waitingTime()
+{
 
+}
 
 
 

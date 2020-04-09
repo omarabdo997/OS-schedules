@@ -20,7 +20,7 @@ public:
 
     void schedule() ;
 
-   // float waitingTime();
+    float waitingTime();
 
 
 };
