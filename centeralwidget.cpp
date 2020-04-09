@@ -93,8 +93,9 @@ void CenteralWidget::create_answer()
     case(0):
         scheduler=new FCFSSched(processes);
         break;
-//    case(1):
-//        scheduler=new
+    case(1):
+        scheduler=new RRSched(processes,ps->getBurst_time());
+        break;
     case(2):
         scheduler=new SJFSched(1,processes);
         break;
@@ -115,7 +116,6 @@ void CenteralWidget::create_answer()
 
     //create answer widget and send needed data
     answer=new Answer(this);
-    qDebug()<<"first:"<<scheduler->getIntervals()[0].getFrom();
     answer->set_model(scheduler->getIntervals());
 
     //create horizontal scroll bar and set it to answer widget
