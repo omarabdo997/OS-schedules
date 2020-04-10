@@ -63,96 +63,108 @@ else  // for preemtive case
 
  {
 
-     float time_all = 0 ; // end of time line
-
-     for (int i = 0 ; i < processes.size() ; i++) { time_all += processes[i].getBurstTime() ; }
-
-  //  qDebug() <<time_all ; // const and static explaining
-
-    float amount = 0 ; // to use it in time slice
-    float first = 0 ; // to use it in getTo
-    int k = 0 ;  // to know index of process that will come soon after finsh
-
-     qSort(processes.begin(),processes.end(),cmp); // for the first time only
-
-while ( finish != time_all )
-    {
-
-// Before corner case
 
 
-      for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime()> finish ) { k = p ; p=time_all ; }    }
+        float time_all = 0 ; // end of time line
 
-       amount =  processes[k].getArrivalTime() - finish ;
+        for (int i = 0 ; i < processes.size() ; i++) { time_all += processes[i].getBurstTime() ; }
 
-       if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
+     //  qDebug() <<time_all ; // const and static explaining
 
-       QString Old_process , New_process ;
+       float amount = 0 ; // to use it in time slice
+       float first = 0 ; // to use it in getTo
+       int k = 0 ;  // to know index of process that will come soon after finsh
 
-       Old_process = processes[0].getName() ;
+        qSort(processes.begin(),processes.end(),cmp); // for the first time only
 
-      interval.setFrom(first);
-
-      finish = finish + amount  ;
-
-      processes[0].setBurstTime( processes[0].getBurstTime()-amount) ;
-
-      if (processes[0].getBurstTime()==0) { processes.remove(0);}
-
-      qSort(processes.begin(),processes.end(),cmp); // sort every finish of time slice " amount "
-
-      New_process = processes[0].getName () ;
-
-      if ( Old_process != New_process )
-      {
-
-          interval.setTo(finish);
-
-          interval.setProcess(processes[0]);
-
-          intervals.push_back(interval);
-
-          first = finish ;
-       }
+   while ( finish != time_all )
+       {
 
 
+   // Before corner case
 
 
-  // After corner case   // After the last one is lager than or equal finish
+         for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime()> finish ) { k = p ; p=time_all ; }    }
+
+          amount =  processes[k].getArrivalTime() - finish ;
+
+          if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
 
 
-   if ( processes[processes.size()-1].getArrivalTime() > finish  )
+          QString Old_process , New_process ;
 
-     {
-       // handle the current case before the data were lost
-      interval.setFrom(first);
 
-      finish = finish + processes[0].getBurstTime() ;
-      interval.setTo(finish);
-      interval.setProcess(processes[0]);
-      intervals.push_back(interval);
-      processes.remove(0);
+          SysProcess Old_pro ; // for process itself
 
-      // the process will be like non preemtive
+          Old_pro = processes[0] ;
 
-        while ( processes.size() != 0 )
-          {
+          Old_process = processes[0].getName() ; // for name
 
-            interval.setFrom(finish);
-            finish += processes[0].getBurstTime();
-            interval.setTo(finish);
-            interval.setProcess(processes[0]);
-            intervals.push_back(interval);
-            processes.remove(0);
+         interval.setFrom(first);
 
+         finish = finish + amount  ;
+
+         processes[0].setBurstTime( processes[0].getBurstTime()-amount) ;
+
+         if (processes[0].getBurstTime()==0) { processes.remove(0);}
+
+         qSort(processes.begin(),processes.end(),cmp); // sort every finish of time slice " amount "
+
+         New_process = processes[0].getName () ;
+
+         if ( Old_process != New_process )
+         {
+
+             interval.setTo(finish);
+
+             interval.setProcess(Old_pro);
+
+             intervals.push_back(interval);
+
+             first = finish ;
           }
 
 
 
-      }
+
+     // After corner case   // After the last one is lager than or equal finish
 
 
-} // for while finish != time_all
+      if ( processes[processes.size()-1].getArrivalTime() > finish  )
+
+        {
+          // handle the current case before the data were lost
+         interval.setFrom(first);
+
+         finish = finish + processes[0].getBurstTime() ;
+         interval.setTo(finish);
+         interval.setProcess(processes[0]);
+         intervals.push_back(interval);
+         processes.remove(0);
+
+         // the process will be like non preemtive
+
+           while ( processes.size() != 0 )
+             {
+
+               interval.setFrom(finish);
+               finish += processes[0].getBurstTime();
+               interval.setTo(finish);
+               interval.setProcess(processes[0]);
+               intervals.push_back(interval);
+               processes.remove(0);
+
+             }
+
+
+
+         }
+
+
+   } // for while finish != time_all
+
+
+
 
 
 
@@ -168,8 +180,7 @@ while ( finish != time_all )
 float SJFSched::waitingTime()
 
 {
-    return 1 ;
-    /*
+
    if (!isPreemtive)   // waiting for non preemitive
     {
       float ans=0;
@@ -179,15 +190,38 @@ float SJFSched::waitingTime()
       return ans;
     }
 
+   else return 2 ;
+/*
   else   // waiting for preemitive
     {
-       float ans=0;
-       for(int i = 0 ; i < intervals.size() ; i++)
-          ans += intervals[i].getFrom()-intervals[i].getProcess().getArrivalTime();
-       ans /= intervals.size();
-       return ans;
-     }
-*/
+
+       // search of waiting time for every one process
+      float ans = 0 , one_wait = 0 , all_wait = 0  ;
+
+      QVector <int> num ;
+
+      for (int j =0 ; j < processes.size() ; j++ )
+        {
+          for(int i = 0 ; i < intervals.size() ; i++)
+            {
+              QString pro = processes[i].getName() ;
+              if (intervals[i].getProcess().getName()==pro) { num.push_back(i); }
+            }
+          for(int i = 0 ; i < num.size()-1 ; i++) // -1 to exit before the exit the vector
+          {
+              float one_in ;
+             one_in=intervals[num[i+1]].getFrom() - intervals[num[i]].getTo()   ;
+             one_wait += one_in ;
+          }
+         all_wait += one_wait ;
+
+        }
+
+      ans = all_wait / processes.size();
+      return ans;
+    }
+
+    */
 
 }
 
