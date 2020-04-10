@@ -8,6 +8,11 @@ bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 
     if( p1.getArrivalTime() <= finish && p1.getBurstTime() < p2.getBurstTime() )
         return true ;
+
+    else if (p1.getArrivalTime() > finish && p2.getArrivalTime() > finish )
+        if (  p1.getArrivalTime() == p2.getArrivalTime() ) {return p1.getBurstTime() < p2.getBurstTime() ; }
+             else return p1.getArrivalTime() < p2.getArrivalTime() ;
+
     else return false;
 }
 
@@ -64,40 +69,107 @@ else  // for preemtive case
 
   //  qDebug() <<time_all ; // const and static explaining
 
-    float decrease = 0 ;
-    for (int i = 0 ; i < time_all ; i++ )  // ++i  // check every time slice
+    float amount = 0 ; // to use it in time slice
+    float first = 0 ; // to use it in getTo
+    int k = 0 ;  // to know index of process that will come soon after finsh
+
+     qSort(processes.begin(),processes.end(),cmp); // for the first time only
+
+while ( finish != time_all )
     {
 
-      interval.setFrom(finish);
-      finish++ ;
-      interval.setTo(finish);
-      interval.setProcess(processes[0]);
-      intervals.push_back(interval);
-      // may check till the Burst time is less 1
+// Before corner case
 
-      if  ( (interval.getTo() - interval.getFrom()) >= 1 )
-          processes[0].getBurstTime() < 1 // we will make a change in finish
-               if processes[0].getArrivalTime()
 
-      processes[0].setBurstTime( processes[0].getBurstTime()-1) ; // decrease time from every finish in time slice
+      for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime()> finish ) { k = p ; p=time_all ; }    }
 
-       processes[0].setBurstTime( processes[0].getBurstTime()-1) ;
+       amount =  processes[k].getArrivalTime() - finish ;
 
-      qSort(processes.begin(),processes.end(),cmp); // sort every finish of time slice
+       if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
+
+       QString Old_process , New_process ;
+
+       Old_process = processes[0].getName() ;
+
+      interval.setFrom(first);
+
+      finish = finish + amount  ;
+
+      processes[0].setBurstTime( processes[0].getBurstTime()-amount) ;
 
       if (processes[0].getBurstTime()==0) { processes.remove(0);}
 
-    }
+      qSort(processes.begin(),processes.end(),cmp); // sort every finish of time slice " amount "
 
- }
+      New_process = processes[0].getName () ;
+
+      if ( Old_process != New_process )
+      {
+
+          interval.setTo(finish);
+
+          interval.setProcess(processes[0]);
+
+          intervals.push_back(interval);
+
+          first = finish ;
+       }
 
 
-}
+
+
+  // After corner case   // After the last one is lager than or equal finish
+
+
+   if ( processes[processes.size()-1].getArrivalTime() > finish  )
+
+     {
+       // handle the current case before the data were lost
+      interval.setFrom(first);
+
+      finish = finish + processes[0].getBurstTime() ;
+      interval.setTo(finish);
+      interval.setProcess(processes[0]);
+      intervals.push_back(interval);
+      processes.remove(0);
+
+      // the process will be like non preemtive
+
+        while ( processes.size() != 0 )
+          {
+
+            interval.setFrom(finish);
+            finish += processes[0].getBurstTime();
+            interval.setTo(finish);
+            interval.setProcess(processes[0]);
+            intervals.push_back(interval);
+            processes.remove(0);
+
+          }
+
+
+
+      }
+
+
+} // for while finish != time_all
+
+
+
+} // for else
+
+
+} // for schedule
+
+
 
 
 
 float SJFSched::waitingTime()
+
 {
+    return 1 ;
+    /*
    if (!isPreemtive)   // waiting for non preemitive
     {
       float ans=0;
@@ -115,6 +187,7 @@ float SJFSched::waitingTime()
        ans /= intervals.size();
        return ans;
      }
+*/
 
 }
 
