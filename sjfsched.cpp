@@ -5,20 +5,6 @@
 float SJFSched :: finish = 0 ;
 
 QVector <SysProcess> SJFSched :: copy_processes ;
-/*
-bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
-{
-
-    if( p1.getArrivalTime() <= finish &&  p1.getBurstTime() < p2.getBurstTime() )
-        return true ;
-
-    else if (p1.getArrivalTime() > finish && p2.getArrivalTime() > finish )
-        if (  p1.getArrivalTime() == p2.getArrivalTime() ) {return p1.getBurstTime() < p2.getBurstTime() ; }
-             else return p1.getArrivalTime() < p2.getArrivalTime() ;
-
-    else return false;
-}
-*/
 
 bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
@@ -51,6 +37,7 @@ bool SJFSched :: get_isPreemptive() {return isPreemtive ; }
 
 void SJFSched::schedule()
 {
+
 
     finish = 0;
     Interval interval = Interval();
@@ -92,13 +79,6 @@ else  // for preemtive case
         SysProcess Old_pro , New_pro ; // for process itself
 
         qSort(processes.begin(),processes.end(),cmp); // for the first time only
-
-/*
-        if(processes[0].getArrivalTime() > finish )    // handle problem of no processes in the first time
-            first = processes[0].getArrivalTime();      // this make a problem when itis inbetween code below
-            finish = processes[0].getArrivalTime();
-*/
-
 
   // Before corner case
 
@@ -255,6 +235,7 @@ float SJFSched::waitingTime()
       ans = all_wait / copy_processes.size();
 
       return ans;
+
     }
 
 
