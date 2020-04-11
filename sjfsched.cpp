@@ -1,7 +1,10 @@
 #include "sjfsched.h"
 #include <algorithm>
+#include <QDebug>
 
 float SJFSched :: finish = 0 ;
+
+QVector <SysProcess> SJFSched :: copy_processes ;
 
 bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
@@ -33,6 +36,7 @@ bool SJFSched :: get_isPreemptive() {return isPreemtive ; }
 
 void SJFSched::schedule()
 {
+
     finish = 0;
     Interval interval = Interval();
     intervals.clear();
@@ -63,56 +67,58 @@ else  // for preemtive case
 
  {
 
+        for (int i=0 ; i < processes.size() ; i++)
+           copy_processes.push_back(processes[i]);
 
-
-        float time_all = 0 ; // end of time line
-
-        for (int i = 0 ; i < processes.size() ; i++) { time_all += processes[i].getBurstTime() ; }
-
-     //  qDebug() <<time_all ; // const and static explaining
 
        float amount = 0 ; // to use it in time slice
        float first = 0 ; // to use it in getTo
        int k = 0 ;  // to know index of process that will come soon after finsh
+        SysProcess Old_pro , New_pro ; // for process itself
 
         qSort(processes.begin(),processes.end(),cmp); // for the first time only
 
-   while ( finish != time_all )
-       {
+
 
 
    // Before corner case
 
+while ( finish < processes[processes.size()-1].getArrivalTime() &&  processes.size() != 0 )
 
-         for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime()> finish ) { k = p ; p=time_all ; }    }
+{
+       if(processes[0].getArrivalTime() > finish )    // handle problem of no processes
+            first = processes[0].getArrivalTime();
+            finish = processes[0].getArrivalTime();
 
+
+     if (processes.size() != 1 )
+       {
+         for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime() > finish ) { k = p ;break; }    }
           amount =  processes[k].getArrivalTime() - finish ;
+        }
+     else { amount = processes[0].getBurstTime() ;}
+
 
           if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
 
+       Old_pro =  processes[0]  ;
 
-          QString Old_process , New_process ;
+       interval.setFrom(first);
 
+       finish = finish + amount  ;
 
-          SysProcess Old_pro ; // for process itself
+       processes[0].setBurstTime( processes[0].getBurstTime()-amount) ;
 
-          Old_pro = processes[0] ;
+       if (processes[0].getBurstTime()==0) { processes.remove(0);}
 
-          Old_process = processes[0].getName() ; // for name
+        if (processes.size() != 0 )
+         {
+            qSort(processes.begin(),processes.end(),cmp);  // sort every finish of time slice " amount "
 
-         interval.setFrom(first);
+            New_pro = processes[0] ;
+         }
 
-         finish = finish + amount  ;
-
-         processes[0].setBurstTime( processes[0].getBurstTime()-amount) ;
-
-         if (processes[0].getBurstTime()==0) { processes.remove(0);}
-
-         qSort(processes.begin(),processes.end(),cmp); // sort every finish of time slice " amount "
-
-         New_process = processes[0].getName () ;
-
-         if ( Old_process != New_process )
+         if (  New_pro.getName() != Old_pro.getName() )
          {
 
              interval.setTo(finish);
@@ -125,14 +131,23 @@ else  // for preemtive case
           }
 
 
+         if (processes.size()==0 )
+         {
+             interval.setTo(finish);
+
+             interval.setProcess(Old_pro);
+
+             intervals.push_back(interval);
+         }
+
+
+} // for while (finish < processes[processes.size()-1] )
 
 
      // After corner case   // After the last one is lager than or equal finish
 
-
-      if ( processes[processes.size()-1].getArrivalTime() > finish  )
-
-        {
+if ( finish >= processes[processes.size()-1].getArrivalTime() &&  processes.size() != 0 )
+  {
           // handle the current case before the data were lost
          interval.setFrom(first);
 
@@ -146,6 +161,7 @@ else  // for preemtive case
 
            while ( processes.size() != 0 )
              {
+              // we need handle time in between if the processor is not avaiable
 
                interval.setFrom(finish);
                finish += processes[0].getBurstTime();
@@ -155,21 +171,11 @@ else  // for preemtive case
                processes.remove(0);
 
              }
+   }
 
 
 
-         }
-
-
-   } // for while finish != time_all
-
-
-
-
-
-
-} // for else
-
+ } // for else
 
 } // for schedule
 
@@ -190,40 +196,46 @@ float SJFSched::waitingTime()
       return ans;
     }
 
-   else return 2 ;
-/*
+
   else   // waiting for preemitive
     {
-
        // search of waiting time for every one process
       float ans = 0 , one_wait = 0 , all_wait = 0  ;
 
       QVector <int> num ;
 
-      for (int j =0 ; j < processes.size() ; j++ )
+      for (int j =0 ; j < copy_processes.size() ; j++ )
         {
-          for(int i = 0 ; i < intervals.size() ; i++)
-            {
-              QString pro = processes[i].getName() ;
-              if (intervals[i].getProcess().getName()==pro) { num.push_back(i); }
-            }
-          for(int i = 0 ; i < num.size()-1 ; i++) // -1 to exit before the exit the vector
-          {
-              float one_in ;
-             one_in=intervals[num[i+1]].getFrom() - intervals[num[i]].getTo()   ;
-             one_wait += one_in ;
-          }
-         all_wait += one_wait ;
+             QString pro = copy_processes[j].getName() ;
+
+             for(int i = 0 ; i < intervals.size() ; i++)  { if (intervals[i].getProcess().getName()==pro) { num.push_back(i); } }
+
+             if (num.size()>1)
+                {
+                   for(int i = 0 ; i < num.size()-1 ; i++) // -1 to exit before the exit the vector
+                       {
+                          float one_in =0 ;
+                          one_in=intervals[num[i+1]].getFrom() - intervals[num[i]].getTo()   ;
+                          one_wait += one_in ;
+                       }
+                }
+
+             else { one_wait = intervals[num[0]].getFrom() - copy_processes[j].getArrivalTime(); }
+
+            all_wait += one_wait ;
+            num.clear();
 
         }
 
-      ans = all_wait / processes.size();
+
+      ans = all_wait / copy_processes.size();
+
       return ans;
     }
 
-    */
 
 }
+
 
 
 

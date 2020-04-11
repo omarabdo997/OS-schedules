@@ -8,7 +8,8 @@ private :
     bool isPreemtive ;
     static bool cmp(const SysProcess &p1,const SysProcess &p2) ;
 public:
-    static float finish   ;  // attribute to know the finish of each process
+    static float finish   ; // attribute to know the finish of each process
+    static QVector <SysProcess> copy_processes  ;
 
     SJFSched();
     SJFSched(bool isPreemtive , QVector<SysProcess> processes );
