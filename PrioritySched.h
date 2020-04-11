@@ -10,6 +10,8 @@ bool is_Preemptive;
 static bool cmp(const SysProcess &p1 , const SysProcess &p2);
 static bool pcmp(const SysProcess &p1,const SysProcess &p2);
 static bool arriv_cmp(QVector<SysProcess>&processes);
+QVector<float>Burst_time_copy_preemptive;
+QVector<float> get_burst_copy(QVector<SysProcess> &processes);
 public:
 
 prioritysched();

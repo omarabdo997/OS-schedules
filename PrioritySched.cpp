@@ -1,11 +1,21 @@
 #include <PrioritySched.h>
 #include <algorithm>
 #include <queue>
-#include <vector>
+#include <iterator>
+#include <QDebug>
 
 void prioritysched :: set_is_Preemptive(bool value){is_Preemptive = value; }
 
 bool prioritysched :: get_is_preemptive(){  return is_Preemptive; }
+
+QVector<float> prioritysched ::get_burst_copy(QVector<SysProcess> &processes)
+{
+    for(int i=0;i<processes.size();i++)
+    {
+        Burst_time_copy_preemptive.push_back(processes[i].getBurstTime());
+    }
+    return Burst_time_copy_preemptive;
+}
 
 
 prioritysched ::prioritysched()
@@ -53,6 +63,18 @@ bool prioritysched :: arriv_cmp(QVector<SysProcess> &processes)
     return equal;
 }
 
+class pq_pcmp{
+public:
+    bool operator()(const SysProcess &p1,const SysProcess &p2)
+    {
+        if(p1.getPriority()> p2.getPriority())
+            return true;
+        else if(p1.getPriority()<p2.getPriority())
+            return false;
+        else if(p1.getPriority()==p2.getPriority())
+            return p1.getArrivalTime()>p2.getArrivalTime();
+    }
+};
 
 
 void prioritysched :: schedule()
@@ -61,6 +83,261 @@ void prioritysched :: schedule()
 
     if(get_is_preemptive())
     {
+        qSort(processes.begin(),processes.end(),cmp);
+        if(arriv_cmp(processes))
+        {
+            float finish =0;
+            Interval interval= Interval();
+            intervals.clear();
+            for(int i = 0 ;i<processes.size();i++)
+            {
+                if(processes[i].getArrivalTime()>finish)
+                    finish = processes[i].getArrivalTime();
+
+                    interval.setFrom(finish);
+                    finish +=processes[i].getBurstTime();
+                    interval.setTo(finish);
+                    interval.setProcess(processes[i]);
+                    intervals.push_back(interval);
+
+            }
+        }
+        else
+        {
+            get_burst_copy(processes); //copy burst times before missing with them
+            float last = 0;
+            std::priority_queue<SysProcess,QVector<SysProcess>,pq_pcmp> my_pq;
+            Interval interval= Interval();
+            intervals.clear();
+            int executed_process = 0;
+            int n = processes.size();
+            int i = 0;
+            while(executed_process<n)
+            {
+                if(i == n)
+                {
+                    int qsize=my_pq.size();
+                    while(!my_pq.empty())
+                    {  float finish=interval.getFrom();;
+                       for(int j=0;j<qsize;j++)
+                       {
+                           if(j==0) //highest priority
+                           {
+                               interval.setTo(finish+my_pq.top().getBurstTime());
+                               finish +=my_pq.top().getBurstTime();
+                               my_pq.pop();
+                               intervals.push_back(interval);
+                               executed_process++;
+                               continue;
+
+                           }
+                           else
+                           {
+                               interval.setFrom(finish);
+                               interval.setTo(finish+my_pq.top().getBurstTime());
+                               finish += my_pq.top().getBurstTime();
+                               interval.setProcess(my_pq.top());
+                               intervals.push_back(interval);
+                               my_pq.pop();
+                               executed_process++;
+                               continue;
+
+                           }
+
+                       }
+
+                    }
+
+
+
+                }
+
+                else if(i==0)
+                {
+                    interval.setFrom(processes[i].getArrivalTime());
+                    interval.setProcess(processes[i]);
+                    if(processes.size()==1)
+                    {
+                        interval.setTo(processes[i].getArrivalTime()+processes[i].getBurstTime());
+                        intervals.push_back(interval);
+                        executed_process++;
+                        continue;
+                    }
+                    my_pq.push(processes[i]);
+                    i++;
+                    continue;
+                }
+                else
+                {
+                    SysProcess prev = my_pq.top();
+
+                    my_pq.push(processes[i]);
+                    if(my_pq.top().getName()==prev.getName()) //the old top didn't change as it has higher priority
+                    {   SysProcess top = my_pq.top(); //the top didn't change
+
+
+                        if(processes[i].getArrivalTime()>=last+top.getBurstTime())
+                        {
+                            while(processes[i].getArrivalTime()>=last+top.getBurstTime())
+                            {
+                                last+=top.getBurstTime();
+                                interval.setTo(last);
+                                intervals.push_back(interval);
+                                executed_process++;
+                                my_pq.pop();
+
+                                top =my_pq.top();
+
+                                if(my_pq.size()==1)
+                                {
+
+                                    break;
+                                }
+                                else if(top.getName()==processes[i].getName()&&my_pq.size()>1 &&top.getArrivalTime()!=last)
+                                {
+                                    top=my_pq.top();
+                                    my_pq.pop();
+                                    SysProcess p = my_pq.top();
+                                    my_pq.pop();
+                                    interval.setFrom(last);
+                                    interval.setProcess(p);
+                                    interval.setTo(top.getArrivalTime());
+                                    intervals.push_back(interval);
+                                    p.setBurstTime(p.getBurstTime()-(top.getArrivalTime()-last));
+                                    last=top.getArrivalTime();
+                                    if(p.getBurstTime()==0)
+                                    {   executed_process++;
+                                        my_pq.push(top);
+                                        interval.setFrom(last);
+                                        interval.setProcess(top);
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        my_pq.push(p);
+                                        my_pq.push(top);
+                                        interval.setFrom(last);
+                                        interval.setProcess(top);
+                                        continue;
+
+                                    }
+                                }
+                                interval.setFrom(last);
+                                interval.setProcess(top);
+                                if(i==n-1)
+                                {   interval.setTo(last+top.getBurstTime());
+                                    last = last+top.getBurstTime();
+                                    intervals.push_back(interval);
+                                    executed_process++;
+                                    my_pq.pop();
+                                    i++;
+                                    break;
+                                }
+                                continue;
+
+                            }
+
+                            if(i==n)
+                            {
+                                interval.setFrom(last);
+                                interval.setProcess(my_pq.top());
+                                continue;
+                            }
+
+
+                            if(my_pq.size()==1)
+                                last= my_pq.top().getArrivalTime();
+                            else if(my_pq.size()>1)
+                                ;
+                            interval.setFrom(last);
+                            interval.setProcess(my_pq.top());
+                            i++;
+                            continue;
+
+                        }
+                        else
+                        {
+                            i++;
+                            continue;
+                        }
+
+                    }
+                    else // has lower priority than the next
+                    {
+                        if(my_pq.top().getArrivalTime()>=last+prev.getBurstTime())
+                        {   while(my_pq.top().getArrivalTime()>=last+prev.getBurstTime())
+                            {
+                                interval.setTo(last+prev.getBurstTime());
+                                last+=prev.getBurstTime();
+                                intervals.push_back(interval);
+                                executed_process++;
+
+                                SysProcess top = my_pq.top();
+                                my_pq.pop();
+
+                                my_pq.pop();
+                                if(my_pq.empty())
+                                {
+                                    my_pq.push(top);
+                                    break;
+                                }
+                                else
+                                {
+                                    prev = my_pq.top();
+                                    my_pq.push(top);
+
+                                    interval.setFrom(last);
+                                    interval.setProcess(prev);
+                                }
+
+                            }
+                            interval.setFrom(my_pq.top().getArrivalTime());
+                            last=my_pq.top().getArrivalTime();
+                            interval.setProcess(my_pq.top());
+                            i++;
+                            continue;
+                        }
+                        else
+                        {
+                            interval.setTo(my_pq.top().getArrivalTime());
+                            intervals.push_back(interval);
+                            SysProcess top = my_pq.top();
+                            my_pq.pop();
+                            SysProcess p = my_pq.top();
+                            my_pq.pop();
+                            p.setBurstTime(p.getBurstTime()-(top.getArrivalTime()-last));
+                            last = top.getArrivalTime();
+                            if(p.getBurstTime()==0)
+                            {   executed_process++;
+                                my_pq.push(top);
+                                interval.setFrom(last);
+                                interval.setProcess(my_pq.top());
+                                i++;
+                                continue;
+                            }
+                            else
+                            {   my_pq.push(p);
+                                my_pq.push(top);
+                                interval.setFrom(last);
+                                interval.setProcess(my_pq.top());
+                                i++;
+                                continue;
+                            }
+
+                        }
+
+                    }
+
+
+                }
+
+
+
+            }
+
+        }
+
+
 
     }
     else
@@ -173,6 +450,43 @@ float prioritysched :: waitingTime() //calculating waitingtime
 {
     if(get_is_preemptive())
     {
+        if(arriv_cmp(processes))
+        {
+            float ans = 0;
+            for(int i =0;i<intervals.size();i++)
+            {
+                ans+=intervals[i].getFrom() - intervals[i].getProcess().getArrivalTime();
+            }
+            return ans/intervals.size();
+        }
+        else
+        {
+
+            float waiting_time[processes.size()];
+            float finish_time[processes.size()];
+            int interval_num;
+            float total_waiting =0;
+            for(int i=0;i<processes.size();i++)
+            {
+                for(int j=0;j<intervals.size();j++)
+                {
+                  if(intervals[j].getProcess().getName()==processes[i].getName())
+                    interval_num=j;
+                }
+                finish_time[i]=intervals[interval_num].getTo();
+            }
+
+            for(int i=0;i<processes.size();i++)
+            {
+                waiting_time[i] = finish_time[i]-Burst_time_copy_preemptive[i]-processes[i].getArrivalTime();
+            }
+            for(int i=0;i<processes.size();i++)
+            {
+                total_waiting+=waiting_time[i];
+            }
+
+            return total_waiting/processes.size();
+        }
 
     }
     else
@@ -184,6 +498,6 @@ float prioritysched :: waitingTime() //calculating waitingtime
 
         }
 
-        return ans/intervals.size();;
+        return ans/intervals.size();
     }
 }
