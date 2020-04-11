@@ -10,7 +10,7 @@ private :
 
 public:
     static float finish   ; // attribute to know the finish of each process
-    static QVector <SysProcess> copy_processes  ; // to use it in waiting time // i remove the original vector in preemtive
+    QVector <SysProcess> copy_processes  ; // to use it in waiting time // i remove the original vector in preemtive
 
     SJFSched();
     SJFSched(bool isPreemtive , QVector<SysProcess> processes );

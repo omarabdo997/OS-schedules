@@ -4,7 +4,7 @@
 
 float SJFSched :: finish = 0 ;
 
-QVector <SysProcess> SJFSched :: copy_processes ;
+//QVector <SysProcess> SJFSched :: copy_processes ;
 
 int SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
@@ -55,6 +55,8 @@ SJFSched::SJFSched()
 {
  this->set_isPreemptive(isPreemtive);
  this->setProcesses(processes);
+ finish=0;
+
 }
 
 void SJFSched :: set_isPreemptive(bool value) { isPreemtive = value ; }
