@@ -18,11 +18,14 @@ public:
     void setModel(int op,int no_p);
     QVector<SysProcess> getProcesses() const;
 
+    float getBurst_time() const;
+
 public slots:
 signals:
     void input_finished();
 private:
     QVector<SysProcess>processes;
+    float burst_time;
 
 
 

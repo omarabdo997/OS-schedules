@@ -85,7 +85,7 @@ void CenteralWidget::create_answer()
 
     //get submited processes
     processes=ps->getProcesses();
-
+    qDebug()<<"processes"<<processes.size();
 
     //dynamic bynding to scheduler class
     switch (scheduleselect->getOp())
@@ -93,8 +93,15 @@ void CenteralWidget::create_answer()
     case(0):
         scheduler=new FCFSSched(processes);
         break;
-//    case(1):
-//        scheduler=new
+    case(1):
+        scheduler=new RRSched(processes,ps->getBurst_time());
+        break;
+    case(2):
+        scheduler=new SJFSched(1,processes);
+        break;
+    case(3):
+        scheduler=new SJFSched(0,processes);
+        break;
     case(4):
         scheduler=new prioritysched(processes,1);
         break;

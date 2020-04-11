@@ -24,8 +24,10 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     processesselector.cpp \
+    rrsched.cpp \
     scheduleselect.cpp \
     interval.cpp \
+    sjfsched.cpp \
     sysprocess.cpp \
     scheduler.cpp
 
@@ -36,8 +38,10 @@ HEADERS += \
     fcfssched.h \
     mainwindow.h \
     processesselector.h \
+    rrsched.h \
     scheduleselect.h \
     interval.h \
+    sjfsched.h \
     sysprocess.h \
     scheduler.h
 
