@@ -6,19 +6,57 @@ float SJFSched :: finish = 0 ;
 
 QVector <SysProcess> SJFSched :: copy_processes ;
 
-bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
+/*
+bool SJFSched::cmp_first(const SysProcess &p1,const SysProcess &p2)
 {
-
-    if( p1.getArrivalTime() <= finish &&  p1.getArrivalTime() <= finish )
-        return p1.getBurstTime() < p2.getBurstTime() ;
-
-
-    else if (p1.getArrivalTime() > finish && p2.getArrivalTime() > finish )
-        if (  p1.getArrivalTime() == p2.getArrivalTime() ) {return p1.getBurstTime() < p2.getBurstTime() ; }
-             else return p1.getArrivalTime() < p2.getArrivalTime() ;
-
+    if(p1.getArrivalTime() < p2.getArrivalTime())
+        return true;
+    else if (p1.getArrivalTime() == p2.getArrivalTime())
+        return p1.getBurstTime() < p2.getBurstTime();
     else return false;
 }
+*/
+
+
+int SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
+{
+
+    if ( p1.getArrivalTime() <= finish )
+
+      {
+        if (p2.getArrivalTime() <= finish)
+        {
+            if      ( p1.getBurstTime() < p2.getBurstTime() ) { return true  ;}
+            else if ( p1.getBurstTime() < p2.getBurstTime() ) { return 0     ;}
+            else                                              { return false ;}
+        }
+
+         else {return true ;}
+      }
+
+    else // p1.getArrivalTime() > finish
+
+      {
+        if (p2.getArrivalTime() <= finish )  { return false ;}
+
+         else
+          {
+            if(p1.getArrivalTime() < p2.getArrivalTime())
+                return true;
+            else if (p1.getArrivalTime() == p2.getArrivalTime())
+               {
+                if      ( p1.getBurstTime() < p2.getBurstTime() ) { return true  ;}
+                else if ( p1.getBurstTime() < p2.getBurstTime() ) { return 0     ;}
+                else                                              { return false ;}
+               }
+            else return false;
+          }
+
+       }
+
+}
+
+
 
 SJFSched::SJFSched()
 {
@@ -79,18 +117,23 @@ else  // for preemtive case
         SysProcess Old_pro , New_pro ; // for process itself
 
         qSort(processes.begin(),processes.end(),cmp); // for the first time only
+   for (int i = 0 ; i < processes.size(); i++)
+         { qDebug() << (processes[i].getName()) ; }
 
-  // Before corner case
+        qDebug() << finish ;
 
-     float c = processes[processes.size()-1].getArrivalTime() ;
+       if(processes[0].getArrivalTime() > finish )    // handle problem of no processes in the first time only
+        { first = processes[0].getArrivalTime();
+          finish = processes[0].getArrivalTime(); }
+
+       float c = processes[processes.size()-1].getArrivalTime() ;
+
+       // Before corner case
 
 while ( finish < c &&  processes.size() != 0 )
 
 {
 
-    if(processes[0].getArrivalTime() > finish )    // handle problem of no processes in the first time
-       { first = processes[0].getArrivalTime();      // this make a problem when itis inbetween code below
-         finish = processes[0].getArrivalTime(); }
 
      if (processes.size() != 1 )
        {
@@ -141,6 +184,11 @@ while ( finish < c &&  processes.size() != 0 )
 
              first = finish ;
           }
+
+         if(processes[0].getArrivalTime() > finish )    // handle problem of no processes during running
+            { first = processes[0].getArrivalTime();
+              finish = processes[0].getArrivalTime(); }
+
 
 
 
