@@ -5,12 +5,27 @@
 float SJFSched :: finish = 0 ;
 
 QVector <SysProcess> SJFSched :: copy_processes ;
+/*
+bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
+{
+
+    if( p1.getArrivalTime() <= finish &&  p1.getBurstTime() < p2.getBurstTime() )
+        return true ;
+
+    else if (p1.getArrivalTime() > finish && p2.getArrivalTime() > finish )
+        if (  p1.getArrivalTime() == p2.getArrivalTime() ) {return p1.getBurstTime() < p2.getBurstTime() ; }
+             else return p1.getArrivalTime() < p2.getArrivalTime() ;
+
+    else return false;
+}
+*/
 
 bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
 
-    if( p1.getArrivalTime() <= finish && p1.getBurstTime() < p2.getBurstTime() )
-        return true ;
+    if( p1.getArrivalTime() <= finish &&  p1.getArrivalTime() <= finish )
+        return p1.getBurstTime() < p2.getBurstTime() ;
+
 
     else if (p1.getArrivalTime() > finish && p2.getArrivalTime() > finish )
         if (  p1.getArrivalTime() == p2.getArrivalTime() ) {return p1.getBurstTime() < p2.getBurstTime() ; }
@@ -78,25 +93,34 @@ else  // for preemtive case
 
         qSort(processes.begin(),processes.end(),cmp); // for the first time only
 
+/*
+        if(processes[0].getArrivalTime() > finish )    // handle problem of no processes in the first time
+            first = processes[0].getArrivalTime();      // this make a problem when itis inbetween code below
+            finish = processes[0].getArrivalTime();
+*/
 
 
+  // Before corner case
 
-   // Before corner case
+     float c = processes[processes.size()-1].getArrivalTime() ;
 
-while ( finish < processes[processes.size()-1].getArrivalTime() &&  processes.size() != 0 )
+while ( finish < c &&  processes.size() != 0 )
 
 {
-       if(processes[0].getArrivalTime() > finish )    // handle problem of no processes
-            first = processes[0].getArrivalTime();
-            finish = processes[0].getArrivalTime();
 
+    if(processes[0].getArrivalTime() > finish )    // handle problem of no processes in the first time
+       { first = processes[0].getArrivalTime();      // this make a problem when itis inbetween code below
+         finish = processes[0].getArrivalTime(); }
 
      if (processes.size() != 1 )
        {
-         for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime() > finish ) { k = p ;break; }    }
-          amount =  processes[k].getArrivalTime() - finish ;
+         for (int p = 0 ; p < processes.size() ; p++ )  { if (processes[p].getArrivalTime() > finish ) { k = p ; break; }    }
+         qDebug() << " processes[k].getArrivalTime() is  " << processes[k].getArrivalTime() ;
+          qDebug() << "finish is " << finish ;
+         amount =  processes[k].getArrivalTime() - finish ;
         }
-     else { amount = processes[0].getBurstTime() ;}
+
+     else  { amount = processes[0].getBurstTime() ;} // if there is only last one in vector
 
 
           if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
@@ -117,6 +141,14 @@ while ( finish < processes[processes.size()-1].getArrivalTime() &&  processes.si
 
             New_pro = processes[0] ;
          }
+        else
+        {
+            interval.setTo(finish);
+
+            interval.setProcess(Old_pro);
+
+            intervals.push_back(interval);
+        }
 
          if (  New_pro.getName() != Old_pro.getName() )
          {
@@ -131,22 +163,13 @@ while ( finish < processes[processes.size()-1].getArrivalTime() &&  processes.si
           }
 
 
-         if (processes.size()==0 )
-         {
-             interval.setTo(finish);
-
-             interval.setProcess(Old_pro);
-
-             intervals.push_back(interval);
-         }
-
 
 } // for while (finish < processes[processes.size()-1] )
 
 
      // After corner case   // After the last one is lager than or equal finish
 
-if ( finish >= processes[processes.size()-1].getArrivalTime() &&  processes.size() != 0 )
+if ( finish >= c &&  processes.size() != 0 )
   {
           // handle the current case before the data were lost
          interval.setFrom(first);
@@ -161,6 +184,7 @@ if ( finish >= processes[processes.size()-1].getArrivalTime() &&  processes.size
 
            while ( processes.size() != 0 )
              {
+
               // we need handle time in between if the processor is not avaiable
 
                interval.setFrom(finish);
