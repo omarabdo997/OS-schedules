@@ -164,6 +164,7 @@ void prioritysched :: schedule()
                         continue;
                     }
                     my_pq.push(processes[i]);
+                    last=processes[i].getArrivalTime();
                     i++;
                     continue;
                 }
