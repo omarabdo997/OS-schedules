@@ -23,13 +23,18 @@ RRSched::RRSched()
 void RRSched::schedule()
 {
     qSort(processes.begin(),processes.end(),cmp);
-    QQueue<SysProcess> processesQueue = new QQueue(processes);
-    QQueue<SysProcess> runningProcessesQueue = new QQueue(processes[0]);
+    QQueue<SysProcess> processesQueue;
+    for(int i=0;i<processes.size();i++)
+    {
+        processesQueue.enqueue(processes[i]);
+    }
+    QQueue<SysProcess> runningProcessesQueue;
+    runningProcessesQueue.enqueue(processes[0]);
     Interval interval = Interval();
     intervals.clear();
     float finish = processesQueue.dequeue().getArrivalTime();
     SysProcess p;
-    while(!ProcessesQueue.empty())
+    while(!runningProcessesQueue.empty())
     {
         p = runningProcessesQueue.dequeue();
         interval.setFrom(finish);
@@ -47,8 +52,12 @@ void RRSched::schedule()
 
         intervals.push_back(interval);
 
-        if(processesQueue.head().getArrivalTime() <= finish)
-            runningProcessesQueue.push_front(processesQueue.dequeue());
+        if(!processesQueue.empty())
+        {
+            if(processesQueue.head().getArrivalTime() <= finish)
+                runningProcessesQueue.push_front(processesQueue.dequeue());
+        }
+
 
         if(runningProcessesQueue.empty())
         {
