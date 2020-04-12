@@ -12,7 +12,7 @@ void RRSched::setQuantumTime(float value)
 
 bool RRSched::cmp(const SysProcess &p1, const SysProcess &p2)
 {
-    return p1.getArrivalTime() < p2.getArrivalTime();
+    return p1.getArrivalTime()<p2.getArrivalTime();
 }
 
 RRSched::RRSched()
@@ -42,21 +42,30 @@ void RRSched::schedule()
         {
             finish+=quantumTime;
             p.setBurstTime(p.getBurstTime()-quantumTime);
+            while(!processesQueue.empty() && processesQueue.head().getArrivalTime() <= finish)
+            {
+
+                    runningProcessesQueue.enqueue(processesQueue.dequeue());
+            }
             runningProcessesQueue.enqueue(p);
         }
         else
+        {
             finish+=p.getBurstTime();
+            while(!processesQueue.empty() && processesQueue.head().getArrivalTime() <= finish)
+            {
+
+                    runningProcessesQueue.enqueue(processesQueue.dequeue());
+            }
+        }
+
 
         interval.setTo(finish);
         interval.setProcess(p);
 
         intervals.push_back(interval);
 
-        if(!processesQueue.empty())
-        {
-            if(processesQueue.head().getArrivalTime() <= finish)
-                runningProcessesQueue.push_front(processesQueue.dequeue());
-        }
+
 
 
         if(runningProcessesQueue.empty())
