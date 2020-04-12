@@ -44,6 +44,8 @@ bool prioritysched ::pcmp(const SysProcess &p1,const SysProcess &p2)
         return true;
     else if(p1.getPriority()==p2.getPriority())
         return p1.getArrivalTime()<p2.getArrivalTime();
+    else
+        return false;
 }
 
 bool prioritysched :: arriv_cmp(QVector<SysProcess> &processes)
@@ -73,6 +75,8 @@ public:
             return false;
         else if(p1.getPriority()==p2.getPriority())
             return p1.getArrivalTime()>p2.getArrivalTime();
+        else
+            return false;
     }
 };
 
