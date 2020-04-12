@@ -65,7 +65,7 @@ bool SJFSched :: get_isPreemptive() {return isPreemtive ; }
 
 void SJFSched::schedule()
 {
-    finish = 0;
+    finish = 0; // may be not useful because the constructor make it
     Interval interval = Interval();
     intervals.clear();
 
@@ -134,7 +134,7 @@ while ( finish < c &&  processes.size() != 0 )
 
      else  { amount = processes[0].getBurstTime() ; } // if there is only last one in vector
 
-     if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amout is over
+     if ( amount > processes[0].getBurstTime() ) { amount = processes[0].getBurstTime() ; }  // if the available amount is over
 
      Old_pro =  processes[0]  ;
 
@@ -250,12 +250,15 @@ float SJFSched::waitingTime()
 
              if (num.size()>1)
                 {
-                   for(int i = 0 ; i < num.size()-1 ; i++) // -1 to exit before the exit the vector
+                  float first_it = 0 ;
+                        first_it = intervals[num[0]].getFrom() - copy_processes[j].getArrivalTime();
+                   for(int i = 1 ; i < num.size() ; i++)
                        {
                           float one_in =0 ;
-                          one_in=intervals[num[i+1]].getFrom() - intervals[num[i]].getTo()   ;
+                          one_in=intervals[num[i]].getFrom() - intervals[num[i-1]].getTo()   ;
                           one_wait += one_in ;
                        }
+                   one_wait += first_it ;
                 }
 
              else { one_wait = intervals[num[0]].getFrom() - copy_processes[j].getArrivalTime(); }
