@@ -92,12 +92,12 @@ void ProcessesSelector::setModel(int op, int no_p)
           {
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
-              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              if(p_arrival_time[i]->text()=="." or p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
                   return;
               }
-              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              if(p_time[i]->text()=="." or p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
                   return;
@@ -168,7 +168,7 @@ void ProcessesSelector::setModel(int op, int no_p)
       connect(submit,&QPushButton::clicked,this,[=]()
       {
           processes.clear();
-          if(!is_number(burst->text().toStdString()) or burst->text()=="" or burst->text().toFloat()<=0)
+          if(burst->text()=="." or !is_number(burst->text().toStdString()) or burst->text()=="" or burst->text().toFloat()<=0)
           {
               QMessageBox::critical(this,"Wrong quantum time","Please submit a valid quantum time!");
               return ;
@@ -178,12 +178,12 @@ void ProcessesSelector::setModel(int op, int no_p)
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
 
-              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              if(p_arrival_time[i]->text()=="." or p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
                   return;
               }
-              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              if(p_time[i]->text()=="." or p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
                   return;
@@ -259,17 +259,17 @@ void ProcessesSelector::setModel(int op, int no_p)
           {
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
-              if(p_priority[i]->text().toFloat()<0 or p_priority[i]->text()=="" or !is_number(p_priority[i]->text().toStdString()))
+              if(p_priority[i]->text()=="." or p_priority[i]->text().toFloat()<0 or p_priority[i]->text()=="" or !is_number(p_priority[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong priority","Please submit valid priority values!");
                   return;
               }
-              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              if(p_arrival_time[i]->text()=="." or p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
                   return;
               }
-              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              if(p_time[i]->text()=="." or p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
               {
                   QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
                   return;

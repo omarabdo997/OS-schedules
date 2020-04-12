@@ -37,9 +37,17 @@ private:
 //    }
     bool is_number(const std::string& s)
     {
+        int points=0;
         std::string::const_iterator it = s.begin();
-        while (it != s.end() && std::isdigit(*it)) ++it;
-        return !s.empty() && it == s.end();
+        while (it != s.end() && (std::isdigit(*it) or ((*it)=='.')))
+        {
+            if((*it)=='.')
+            {
+                points++;
+            }
+            ++it;
+        }
+        return !s.empty() && it == s.end() && points<=1 && s.back()!='.';
     }
 
 
