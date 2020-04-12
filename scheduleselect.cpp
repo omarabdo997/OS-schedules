@@ -170,7 +170,7 @@ ScheduleSelect::ScheduleSelect(QWidget *parent) :
             emit input_finished();
         else
         {
-            QMessageBox::critical(this,"Wrong input","Please select a schedule and enter a valid process number");
+            QMessageBox::critical(this,"Wrong input","Please select a schedule and enter a valid number of processes!");
         }
         qDebug()<<getOp();
         qDebug()<<getNo_p();

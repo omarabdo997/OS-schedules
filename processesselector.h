@@ -7,6 +7,7 @@
 #include <QGridLayout>
 #include <QPushButton>
 #include "sysprocess.h"
+#include <string>
 
 class ProcessesSelector : public QWidget
 {
@@ -26,7 +27,20 @@ signals:
 private:
     QVector<SysProcess>processes;
     float burst_time;
+//    bool isNumber (QString line)
+//    {
 
+//        if (std::isdigit((line.toStdString().c_str())))
+//            return true;
+
+//        return false;
+//    }
+    bool is_number(const std::string& s)
+    {
+        std::string::const_iterator it = s.begin();
+        while (it != s.end() && std::isdigit(*it)) ++it;
+        return !s.empty() && it == s.end();
+    }
 
 
 

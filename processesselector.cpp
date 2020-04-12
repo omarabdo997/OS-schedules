@@ -8,6 +8,7 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QColorDialog>
+#include <QMessageBox>
 
 
 ProcessesSelector::ProcessesSelector(QWidget *parent) :
@@ -50,7 +51,7 @@ void ProcessesSelector::setModel(int op, int no_p)
           p_label[i]->setFont(label_text);
           p_label[i]->setAutoFillBackground(true);
           p_time.push_back(new QLineEdit(this));
-          p_time[i]->setPlaceholderText("Time");
+          p_time[i]->setPlaceholderText("Burst Time");
 
           p_arrival_time.push_back(new QLineEdit(this));
           p_arrival_time[i]->setPlaceholderText("Arrival Time");
@@ -91,8 +92,26 @@ void ProcessesSelector::setModel(int op, int no_p)
           {
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
-
-
+              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
+                  return;
+              }
+              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
+                  return;
+              }
+              if(rgb==QVector<int>{240,240,240})
+              {
+                  rgb[0]=rand()%256;
+                  rgb[1]=rand()%256;
+                  rgb[2]=rand()%256;
+                  QPalette palete;
+                  QColor color(rgb[0],rgb[1],rgb[2]);
+                  palete.setColor(QPalette::Window,color);
+                  p_label[i]->setPalette(palete);
+              }
               processes.push_back(SysProcess(p_label[i]->text(),rgb,p_time[i]->text().toFloat(),p_arrival_time[i]->text().toFloat(),0));
           }
           emit input_finished();
@@ -106,7 +125,7 @@ void ProcessesSelector::setModel(int op, int no_p)
           p_label[i]->setFont(label_text);
           p_label[i]->setAutoFillBackground(true);
           p_time.push_back(new QLineEdit(this));
-          p_time[i]->setPlaceholderText("Time");
+          p_time[i]->setPlaceholderText("Burst Time");
           p_arrival_time.push_back(new QLineEdit(this));
           p_arrival_time[i]->setPlaceholderText("Arrival Time");
 
@@ -138,7 +157,7 @@ void ProcessesSelector::setModel(int op, int no_p)
 
       burst=new QLineEdit(this);
 
-      burst->setPlaceholderText("Burst Time");
+      burst->setPlaceholderText("Quantum Time");
 
 
 
@@ -149,12 +168,36 @@ void ProcessesSelector::setModel(int op, int no_p)
       connect(submit,&QPushButton::clicked,this,[=]()
       {
           processes.clear();
+          if(!is_number(burst->text().toStdString()) or burst->text()=="" or burst->text().toFloat()<=0)
+          {
+              QMessageBox::critical(this,"Wrong quantum time","Please submit a valid quantum time!");
+              return ;
+          }
           for(int i=0;i<no_p;i++)
           {
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
 
-
+              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
+                  return;
+              }
+              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
+                  return;
+              }
+              if(rgb==QVector<int>{240,240,240})
+              {
+                  rgb[0]=rand()%256;
+                  rgb[1]=rand()%256;
+                  rgb[2]=rand()%256;
+                  QPalette palete;
+                  QColor color(rgb[0],rgb[1],rgb[2]);
+                  palete.setColor(QPalette::Window,color);
+                  p_label[i]->setPalette(palete);
+              }
               processes.push_back(SysProcess(p_label[i]->text(),rgb,p_time[i]->text().toFloat(),p_arrival_time[i]->text().toFloat(),0));
           }
           burst_time=burst->text().toFloat();
@@ -171,7 +214,7 @@ void ProcessesSelector::setModel(int op, int no_p)
           p_label[i]->setAutoFillBackground(true);
 
           p_time.push_back(new QLineEdit(this));
-          p_time[i]->setPlaceholderText("Time");
+          p_time[i]->setPlaceholderText("Burst Time");
           p_time[i]->setMaximumWidth(90);
           p_arrival_time.push_back(new QLineEdit(this));
           p_arrival_time[i]->setPlaceholderText("Arrival Time");
@@ -216,8 +259,31 @@ void ProcessesSelector::setModel(int op, int no_p)
           {
               QColor color=p_label[i]->palette().color(QPalette::Window);
               QVector<int>rgb={color.red(),color.green(),color.blue()};
-
-
+              if(p_priority[i]->text().toFloat()<0 or p_priority[i]->text()=="" or !is_number(p_priority[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong priority","Please submit valid priority values!");
+                  return;
+              }
+              if(p_arrival_time[i]->text().toFloat()<0 or p_arrival_time[i]->text()=="" or !is_number(p_arrival_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid arrival times!");
+                  return;
+              }
+              if(p_time[i]->text().toFloat()<0 or p_time[i]->text()=="" or !is_number(p_time[i]->text().toStdString()))
+              {
+                  QMessageBox::critical(this,"Wrong burst time","Please submit valid burst times!");
+                  return;
+              }
+              if(rgb==QVector<int>{240,240,240})
+              {
+                  rgb[0]=rand()%256;
+                  rgb[1]=rand()%256;
+                  rgb[2]=rand()%256;
+                  QPalette palete;
+                  QColor color(rgb[0],rgb[1],rgb[2]);
+                  palete.setColor(QPalette::Window,color);
+                  p_label[i]->setPalette(palete);
+              }
               processes.push_back(SysProcess(p_label[i]->text(),rgb,p_time[i]->text().toFloat(),p_arrival_time[i]->text().toFloat(),p_priority[i]->text().toFloat()));
           }
           emit input_finished();
