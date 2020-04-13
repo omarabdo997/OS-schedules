@@ -33,6 +33,7 @@ SOURCES += \
     scheduler.cpp
 
 HEADERS += \
+    MinHeap.h \
     PrioritySched.h \
     answer.h \
     centeralwidget.h \

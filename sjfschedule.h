@@ -8,7 +8,7 @@ private:
     bool isPreemtive ;
 public:
     SJFSchedule(bool isPreemtive , QVector<SysProcess> processes);
-
+    static bool cmp(const SysProcess &p1,const SysProcess &p2);
     bool getIsPreemtive() const;
     void setIsPreemtive(bool value);
     void schedule() ;
