@@ -6,7 +6,7 @@ class SJFSched : public Scheduler
 {
 private :
     bool isPreemtive ;
-    static int cmp(const SysProcess &p1,const SysProcess &p2) ;
+    static bool cmp(const SysProcess &p1,const SysProcess &p2) ;
 
 public:
     static float finish   ; // attribute to know the finish of each process

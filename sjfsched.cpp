@@ -1,12 +1,12 @@
 #include "sjfsched.h"
 #include <algorithm>
-
+#include <QDebug>
 
 float SJFSched :: finish = 0 ;
 
 //QVector <SysProcess> SJFSched :: copy_processes ;
 
-int SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
+bool SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
 {
 
     if ( p1.getArrivalTime() <= finish )
@@ -14,9 +14,9 @@ int SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
       {
         if (p2.getArrivalTime() <= finish)
         {
-            if      ( p1.getBurstTime() < p2.getBurstTime() ) { return true  ;}
-            else if ( p1.getBurstTime() < p2.getBurstTime() ) { return 0     ;}
-            else                                              { return false ;}
+            if      ( p1.getBurstTime() < p2.getBurstTime()  ) { return true  ;}
+            else if ( p1.getBurstTime() == p2.getBurstTime() ) { return p1.getArrivalTime() < p2.getArrivalTime() ;}
+            else                                               { return false ;}
         }
 
          else {return true ;}
@@ -34,7 +34,7 @@ int SJFSched::cmp(const SysProcess &p1,const SysProcess &p2)
             else if (p1.getArrivalTime() == p2.getArrivalTime())
                {
                 if      ( p1.getBurstTime() < p2.getBurstTime() ) { return true  ;}
-                else if ( p1.getBurstTime() < p2.getBurstTime() ) { return 0     ;}
+               // else if ( p1.getBurstTime() == p2.getBurstTime() ) { return false     ;}
                 else                                              { return false ;}
                }
             else return false;
@@ -150,6 +150,9 @@ while ( finish < c &&  processes.size() != 0 )
          {
             qSort(processes.begin(),processes.end(),cmp);  // sort every finish of time slice " amount "
 
+            for (int i=0 ; i < processes.size() ; i++)
+               qDebug() << processes[i].getName();
+
             New_pro = processes[0] ;
          }
 
@@ -239,19 +242,19 @@ float SJFSched::waitingTime()
     {
       // search of waiting time for every one process
 
-      float ans = 0 , one_wait = 0 , all_wait = 0  ;
+      float ans = 0 , all_wait = 0  ;
       QVector <int> num ;
 
       for (int j =0 ; j < copy_processes.size() ; j++ )
         {
              QString pro = copy_processes[j].getName() ;
-
+             float one_wait = 0 ;
              for(int i = 0 ; i < intervals.size() ; i++)  { if (intervals[i].getProcess().getName()==pro) { num.push_back(i); } }
 
              if (num.size()>1)
                 {
                   float first_it = 0 ;
-                        first_it = intervals[num[0]].getFrom() - copy_processes[j].getArrivalTime();
+                        first_it = intervals[num[0]].getFrom() - intervals[num[0]].getProcess().getArrivalTime();
                    for(int i = 1 ; i < num.size() ; i++)
                        {
                           float one_in =0 ;
@@ -261,7 +264,7 @@ float SJFSched::waitingTime()
                    one_wait += first_it ;
                 }
 
-             else { one_wait = intervals[num[0]].getFrom() - copy_processes[j].getArrivalTime(); }
+             else { one_wait = intervals[num[0]].getFrom() - intervals[num[0]].getProcess().getArrivalTime(); }
 
              all_wait += one_wait ;
              num.clear();
