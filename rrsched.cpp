@@ -12,7 +12,19 @@ void RRSched::setQuantumTime(float value)
 
 bool RRSched::cmp(const SysProcess &p1, const SysProcess &p2)
 {
-    return p1.getArrivalTime()<p2.getArrivalTime();
+    if(p1.getArrivalTime()<p2.getArrivalTime())
+    {
+        return true;
+    }
+    else if(p1.getArrivalTime()==p2.getArrivalTime())
+    {
+        QString p1name=p1.getName();
+        QString p2name=p2.getName();
+         p1name=p1name.remove(0,1);
+         p2name=p2name.remove(0,1);
+         return p1name.toInt()<p2name.toInt();
+    }
+    return false;
 }
 
 RRSched::RRSched()

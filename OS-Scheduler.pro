@@ -28,10 +28,12 @@ SOURCES += \
     scheduleselect.cpp \
     interval.cpp \
     sjfsched.cpp \
+    sjfschedule.cpp \
     sysprocess.cpp \
     scheduler.cpp
 
 HEADERS += \
+    MinHeap.h \
     PrioritySched.h \
     answer.h \
     centeralwidget.h \
@@ -42,6 +44,7 @@ HEADERS += \
     scheduleselect.h \
     interval.h \
     sjfsched.h \
+    sjfschedule.h \
     sysprocess.h \
     scheduler.h
 

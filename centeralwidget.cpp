@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QScrollBar>
+#include "sjfschedule.h"
 
 
 CenteralWidget::CenteralWidget(QWidget *parent) :
@@ -97,10 +98,10 @@ void CenteralWidget::create_answer()
         scheduler=new RRSched(processes,ps->getBurst_time());
         break;
     case(2):
-        scheduler=new SJFSched(1,processes);
+        scheduler=new SJFSchedule(1,processes);
         break;
     case(3):
-        scheduler=new SJFSched(0,processes);
+        scheduler=new SJFSchedule(0,processes);
         break;
     case(4):
         scheduler=new prioritysched(processes,1);
