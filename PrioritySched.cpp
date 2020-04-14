@@ -43,7 +43,14 @@ bool prioritysched ::pcmp(const SysProcess &p1,const SysProcess &p2)
     if(p1.getPriority()<p2.getPriority())
         return true;
     else if(p1.getPriority()==p2.getPriority())
-        return p1.getArrivalTime()<p2.getArrivalTime();
+    {
+        if(p1.getArrivalTime()<p2.getArrivalTime())
+            return true;
+        else if(p1.getArrivalTime()==p2.getArrivalTime())
+            return p1.getBurstTime()<p2.getBurstTime();
+        else
+            return false;
+    }
     else
         return false;
 }
