@@ -251,7 +251,11 @@ void prioritysched :: schedule()
 
                             if(i==n)
                             {
-                                interval.setFrom(last);
+                                if(processes[i-1].getArrivalTime()==last)
+                                    interval.setFrom(last);
+                                else
+                                    interval.setFrom(processes[i-1].getArrivalTime());
+
                                 interval.setProcess(my_pq.top());
                                 continue;
                             }
